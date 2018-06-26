@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.google.android.material.button.MaterialButton;
 
@@ -30,12 +31,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainFragment extends Fragment {
 
-    public MainFragment(){}
+    public MainFragment() {
+    }
 
     private MainViewModel mViewModel;
     private NotesAdapter mAdapter = new NotesAdapter();
@@ -53,6 +56,25 @@ public class MainFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.notesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                Note note = (Note) viewHolder.itemView.getTag();
+                mViewModel.deleteNote(note);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         button.setOnClickListener(v ->
                 Navigation.findNavController(button).navigate(R.id.mainToAddAction));
 
