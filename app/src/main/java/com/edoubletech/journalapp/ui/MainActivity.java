@@ -11,30 +11,19 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.ui.main;
+package com.edoubletech.journalapp.ui;
 
-import com.edoubletech.journalapp.data.NotesRepository;
-import com.edoubletech.journalapp.data.model.Note;
+import android.os.Bundle;
 
-import java.util.List;
+import com.edoubletech.journalapp.R;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainViewModel extends ViewModel {
+public class MainActivity extends AppCompatActivity {
 
-    private NotesRepository mRepo;
-
-    public MainViewModel(NotesRepository repository) {
-        mRepo = repository;
-    }
-
-
-    public LiveData<List<Note>> getListOfNotes() {
-        return mRepo.getListOfNotes();
-    }
-
-    public void deleteNote(Note note) {
-        mRepo.deleteNote(note);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
     }
 }
