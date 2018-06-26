@@ -13,20 +13,21 @@
 
 package com.edoubletech.journalapp;
 
-import android.app.Application;
-
 import com.edoubletech.journalapp.di.ApplicationComponent;
 import com.edoubletech.journalapp.di.DaggerApplicationComponent;
 import com.edoubletech.journalapp.di.RoomModule;
 
-public class MyJournal extends Application {
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
+
+public class MyJournal extends MultiDexApplication {
 
     private ApplicationComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        MultiDex.install(this);
         appComponent = DaggerApplicationComponent
                 .builder()
                 .roomModule(new RoomModule(this))
