@@ -9,6 +9,8 @@ android :
   components :
     - tools
     - platform-tools
+    - tools
+    - extra
     - build-tools-$ANDROID_BUILD_TOOLS_VERSION
     - android - $ANDROID_API_LEVEL
     - extra-google-google_play_services
@@ -26,3 +28,5 @@ cache:
     - $HOME/.android/build-cache
 script :
     - ./gradlew build
+before_install:
+ - chmod +x gradlew
