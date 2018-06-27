@@ -45,7 +45,6 @@ public class AddFragment extends Fragment {
 
 
     public AddFragment() {
-        // Required empty public constructor
     }
 
     private AddViewModel mViewModel;
@@ -54,7 +53,6 @@ public class AddFragment extends Fragment {
     MaterialButton saveButton;
     @Inject
     ViewModelFactory factory;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +65,6 @@ public class AddFragment extends Fragment {
         descriptionLayout = view.findViewById(R.id.descriptionLayout);
         titleEditText = view.findViewById(R.id.titleEditText);
         titleLayout = view.findViewById(R.id.titleLayout);
-
         return view;
     }
 
@@ -76,15 +73,28 @@ public class AddFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ((MyJournal) getActivity().getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, factory).get(AddViewModel.class);
-        String title = titleEditText.getText().toString().trim();
-        String description = descriptionEditText.getText().toString().trim();
+        Bundle bundle = getArguments();
+
+        if (bundle != null) {
+            int noteId = bundle.getInt("NOTES_ID");
+            mViewModel.getNoteById(noteId).observe(this, noteData -> {
+                if (noteData != null) {
+                    titleEditText.setText(noteData.getTitle());
+                    descriptionEditText.setText(noteData.getDescription());
+                }
+            });
+        }
+
         Date date = Calendar.getInstance().getTime();
 
         saveButton.setOnClickListener(v -> {
-            Note note = new Note(title, description, date);
-            mViewModel.addNote(note);
-            Navigation.findNavController(saveButton).navigate(R.id.backToSourceAction);
+            if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
+                String title = titleEditText.getText().toString().trim();
+                String description = descriptionEditText.getText().toString().trim();
+                Note note = new Note(title, description, date);
+                mViewModel.addNote(note);
+                Navigation.findNavController(saveButton).navigate(R.id.backToSourceAction);
+            }
         });
-
     }
 }

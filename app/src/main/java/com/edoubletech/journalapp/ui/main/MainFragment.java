@@ -50,7 +50,13 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         MaterialButton button = view.findViewById(R.id.addNoteButton);
         RecyclerView recyclerView = view.findViewById(R.id.notesRecyclerView);
@@ -72,13 +78,11 @@ public class MainFragment extends Fragment {
                 mViewModel.deleteNote(note);
             }
         };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
 
         button.setOnClickListener(v ->
                 Navigation.findNavController(button).navigate(R.id.mainToAddAction));
-
-        return view;
     }
 
     @Override
