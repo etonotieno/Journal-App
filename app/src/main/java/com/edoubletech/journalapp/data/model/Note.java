@@ -23,6 +23,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "notes_table")
 public class Note {
 
+    // TODO : Add more fields to the Note model
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int id;

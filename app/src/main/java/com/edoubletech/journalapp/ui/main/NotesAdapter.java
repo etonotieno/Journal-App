@@ -13,6 +13,7 @@
 
 package com.edoubletech.journalapp.ui.main;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,10 @@ import com.edoubletech.journalapp.data.model.Note;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,16 +65,16 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         holder.titleTextView.setText(currentNote.getTitle());
 
         Date date = currentNote.getDate();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy", Locale.getDefault());
         String formattedDate = dateFormat.format(date);
         holder.dateTextView.setText(formattedDate);
 
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
         String formattedTime = timeFormat.format(date);
         holder.itemView.setTag(currentNote);
     }
 
-    class NotesViewHolder extends RecyclerView.ViewHolder{
+    class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView dateTextView, titleTextView;
 
@@ -79,6 +82,15 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
             super(itemView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
             titleTextView = itemView.findViewById(R.id.noteTitleTextView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Note note = (Note) itemView.getTag();
+            Bundle bundle = new Bundle();
+            bundle.putInt("NOTES_ID", note.getId());
+            Navigation.findNavController(itemView).navigate(R.id.mainToAddAction, bundle);
         }
     }
 }

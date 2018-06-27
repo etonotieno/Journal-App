@@ -13,9 +13,14 @@
 
 package com.edoubletech.journalapp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.edoubletech.journalapp.di.ApplicationComponent;
 import com.edoubletech.journalapp.di.DaggerApplicationComponent;
 import com.edoubletech.journalapp.di.RoomModule;
+import com.google.firebase.FirebaseApp;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
@@ -27,11 +32,21 @@ public class MyJournal extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        FirebaseApp.initializeApp(this);
+
         MultiDex.install(this);
+
         appComponent = DaggerApplicationComponent
                 .builder()
                 .roomModule(new RoomModule(this))
                 .build();
+    }
+
+    public boolean hasNetwork() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = (cm != null) ? cm.getActiveNetworkInfo() : null;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     public ApplicationComponent getAppComponent() {

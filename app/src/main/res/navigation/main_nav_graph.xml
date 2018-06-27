@@ -25,6 +25,9 @@
         <action
             android:id="@+id/mainToAddAction"
             app:destination="@id/addFragment" />
+        <argument
+            android:name="noteId"
+            app:type="integer" />
     </fragment>
     <fragment
         android:id="@+id/addFragment"

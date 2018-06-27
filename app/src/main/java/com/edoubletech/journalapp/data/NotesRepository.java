@@ -15,6 +15,7 @@ package com.edoubletech.journalapp.data;
 
 import com.edoubletech.journalapp.data.dao.NotesDao;
 import com.edoubletech.journalapp.data.model.Note;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import androidx.lifecycle.LiveData;
 public class NotesRepository {
 
     private NotesDao mDao;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Inject
     public NotesRepository(NotesDao dao) {
@@ -40,7 +42,14 @@ public class NotesRepository {
     }
 
     public void addNote(Note note) {
+        db.collection("notes")
+                .document()
+                .set(note);
         mDao.insertData(note);
+    }
+
+    public void updateNote(Note note){
+        mDao.updateData(note);
     }
 
     public void deleteNote(Note note) {

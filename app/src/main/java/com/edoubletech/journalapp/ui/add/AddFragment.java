@@ -76,6 +76,7 @@ public class AddFragment extends Fragment {
         Bundle bundle = getArguments();
 
         if (bundle != null) {
+            // TODO : Add an update functionality
             int noteId = bundle.getInt("NOTES_ID");
             mViewModel.getNoteById(noteId).observe(this, noteData -> {
                 if (noteData != null) {
@@ -88,6 +89,7 @@ public class AddFragment extends Fragment {
         Date date = Calendar.getInstance().getTime();
 
         saveButton.setOnClickListener(v -> {
+            // TODO : Improve the data validation step
             if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
                 String title = titleEditText.getText().toString().trim();
                 String description = descriptionEditText.getText().toString().trim();

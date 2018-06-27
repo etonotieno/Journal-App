@@ -16,6 +16,7 @@ package com.edoubletech.journalapp.ui.add;
 import com.edoubletech.journalapp.data.NotesRepository;
 import com.edoubletech.journalapp.data.model.Note;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 public class AddViewModel extends ViewModel {
@@ -28,6 +29,14 @@ public class AddViewModel extends ViewModel {
 
     public void addNote(Note note) {
         mRepo.addNote(note);
+    }
+
+    public void updateNote(Note note) {
+        mRepo.updateNote(note);
+    }
+
+    public LiveData<Note> getNoteById(int id) {
+        return mRepo.getNoteById(id);
     }
 }
 
