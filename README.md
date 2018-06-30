@@ -1,4 +1,4 @@
-# Journal App
+# Journal App [![CircleCI](https://circleci.com/gh/CodeZilla7/Journal-App/tree/develop.svg?style=svg)](https://circleci.com/gh/CodeZilla7/Journal-App/tree/develop)
 This project is the final Andela Learning Community 3.0 challenge that allows a user to to pen down 
 their thoughts and feelings.
 
