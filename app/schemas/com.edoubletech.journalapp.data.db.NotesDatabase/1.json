@@ -2,17 +2,23 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6474109e6be796d84b911fe7df18eaf9",
+    "identityHash": "f98841d021bf5b8fa9c245cffc63540d",
     "entities": [
       {
         "tableName": "notes_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `note_tile` TEXT, `description` TEXT, `date` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id_child` TEXT, `note_tile` TEXT, `description` TEXT, `date` INTEGER, FOREIGN KEY(`user_id_child`) REFERENCES `user_table`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id_child",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "mTitle",
@@ -40,42 +46,54 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "user_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "user_id_child"
+            ],
+            "referencedColumns": [
+              "user_id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "user_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `email` TEXT, `imageUrl` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `user_name` TEXT, `user_email` TEXT, `user_image_url` TEXT, PRIMARY KEY(`user_id`))",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "columnName": "user_id",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "user_name",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "email",
-            "columnName": "email",
+            "columnName": "user_email",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "imageUrl",
-            "columnName": "imageUrl",
+            "columnName": "user_image_url",
             "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "user_id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -83,7 +101,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6474109e6be796d84b911fe7df18eaf9\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f98841d021bf5b8fa9c245cffc63540d\")"
     ]
   }
 }

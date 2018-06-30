@@ -19,6 +19,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Query;
 
 @Dao
@@ -29,4 +30,10 @@ public abstract class NotesDao implements BaseDao<Note> {
 
     @Query("SELECT * FROM notes_table WHERE id = :notes_id")
     public abstract LiveData<Note> getNote(int notes_id);
+
+    @Query("SELECT * FROM notes_table WHERE user_id_child = :childId")
+    public abstract List<Note> getNotes(String childId);
+
+    @Delete
+    public abstract void deleteNotes(List<Note> notes);
 }

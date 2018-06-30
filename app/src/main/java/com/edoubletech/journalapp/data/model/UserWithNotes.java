@@ -11,29 +11,19 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.ui;
+package com.edoubletech.journalapp.data.model;
 
-import com.edoubletech.journalapp.data.MainRepository;
-import com.edoubletech.journalapp.data.model.Note;
-import com.edoubletech.journalapp.data.model.User;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import androidx.lifecycle.ViewModel;
+import androidx.room.Embedded;
+import androidx.room.Relation;
 
-public class NavHostViewModel extends ViewModel {
+public class UserWithNotes {
 
-    private MainRepository mRepo;
+    @Embedded
+    private User user;
 
-    public NavHostViewModel(MainRepository repository){
-        mRepo = repository;
-    }
-
-    public User getUser(){
-        return mRepo.getUser();
-    }
-
-    public List<Note> getNote(String childId){
-        return mRepo.getNotes(childId);
-    }
+    @Relation(parentColumn = "user_id_child", entityColumn = "user_id")
+    private List<Note> noteList = new ArrayList<>();
 }

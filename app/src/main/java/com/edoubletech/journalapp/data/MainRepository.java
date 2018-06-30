@@ -45,6 +45,10 @@ public class MainRepository {
         return mNotesDao.getListOfNotes();
     }
 
+    public List<Note> getNotes(String childId){
+        return mNotesDao.getNotes(childId);
+    }
+
     public LiveData<Note> getNoteById(int id) {
         return mNotesDao.getNote(id);
     }

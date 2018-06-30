@@ -13,28 +13,34 @@
 
 package com.edoubletech.journalapp.data.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "user_table")
 public class User {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "user_id")
+    private String id;
+    @ColumnInfo(name = "user_name")
     private String name;
+    @ColumnInfo(name = "user_email")
     private String email;
+    @ColumnInfo(name = "user_image_url")
     private String imageUrl;
 
-    public User(String name, String email, String imageUrl) {
+    public User(String name, String email, String imageUrl, @NonNull String id) {
         this.name = name;
+        this.id = id;
         this.email = email;
         this.imageUrl = imageUrl;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
+    @NonNull
+    public String getId() {
         return id;
     }
 

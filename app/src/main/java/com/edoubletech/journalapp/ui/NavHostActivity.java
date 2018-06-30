@@ -27,12 +27,16 @@ import com.bumptech.glide.request.transition.Transition;
 import com.edoubletech.journalapp.JournalSettings;
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.data.dao.NotesDao;
 import com.edoubletech.journalapp.data.dao.UserDao;
+import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.data.model.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -48,9 +52,12 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     ViewModelFactory factory;
     @Inject
     UserDao userDao;
+    @Inject
+    NotesDao notesDao;
 
     NavHostViewModel viewModel;
     private User user;
+    private List<Note> notes;
     private GoogleApiClient mApiClient;
 
     @Override
@@ -61,6 +68,8 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
 
         user = viewModel.getUser();
+        String id = user.getId();
+        notes = viewModel.getNote(id);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -131,6 +140,9 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
                     JournalSettings.setUserLoginStatus(false);
 
                     userDao.deleteData(user);
+
+                    notesDao.deleteNotes(notes);
+
                     // Make the user go back to the LoginActivity
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
