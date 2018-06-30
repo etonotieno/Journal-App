@@ -14,15 +14,19 @@
 package com.edoubletech.journalapp.data.db;
 
 import com.edoubletech.journalapp.data.dao.NotesDao;
+import com.edoubletech.journalapp.data.dao.UserDao;
 import com.edoubletech.journalapp.data.model.Note;
+import com.edoubletech.journalapp.data.model.User;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = {Note.class}, version = 1)
+@Database(entities = {Note.class, User.class}, version = 1)
 @TypeConverters({NotesTypeConverters.class})
 public abstract class NotesDatabase extends RoomDatabase {
 
     public abstract NotesDao notesDao();
+
+    public abstract UserDao userDao();
 }

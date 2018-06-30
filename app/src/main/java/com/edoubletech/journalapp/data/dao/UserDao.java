@@ -11,26 +11,16 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.di;
+package com.edoubletech.journalapp.data.dao;
 
-import com.edoubletech.journalapp.ui.LoginActivity;
-import com.edoubletech.journalapp.ui.NavHostActivity;
-import com.edoubletech.journalapp.ui.add.AddFragment;
-import com.edoubletech.journalapp.ui.main.MainFragment;
+import com.edoubletech.journalapp.data.model.User;
 
-import javax.inject.Singleton;
+import androidx.room.Dao;
+import androidx.room.Query;
 
-import dagger.Component;
+@Dao
+public abstract class UserDao implements BaseDao<User> {
 
-@Singleton
-@Component(modules = {ApplicationModule.class})
-public interface ApplicationComponent {
-
-    void inject(AddFragment addFragment);
-
-    void inject(MainFragment mainFragment);
-
-    void inject(NavHostActivity navHostActivity);
-
-    void inject(LoginActivity loginActivity);
+    @Query("SELECT * FROM user_table")
+    public abstract User getUser();
 }

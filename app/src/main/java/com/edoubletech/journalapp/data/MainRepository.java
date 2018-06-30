@@ -14,7 +14,9 @@
 package com.edoubletech.journalapp.data;
 
 import com.edoubletech.journalapp.data.dao.NotesDao;
+import com.edoubletech.journalapp.data.dao.UserDao;
 import com.edoubletech.journalapp.data.model.Note;
+import com.edoubletech.journalapp.data.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -23,36 +25,40 @@ import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
 
-public class NotesRepository {
+public class MainRepository {
 
-    private NotesDao mDao;
+    private final UserDao mUserDao;
+    private NotesDao mNotesDao;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Inject
-    public NotesRepository(NotesDao dao) {
-        mDao = dao;
+    public MainRepository(NotesDao notesDao, UserDao userDao) {
+        mNotesDao = notesDao;
+        mUserDao = userDao;
+    }
+
+    public User getUser() {
+        return mUserDao.getUser();
     }
 
     public LiveData<List<Note>> getListOfNotes() {
-        return mDao.getListOfNotes();
+        return mNotesDao.getListOfNotes();
     }
 
     public LiveData<Note> getNoteById(int id) {
-        return mDao.getNote(id);
+        return mNotesDao.getNote(id);
     }
 
     public void addNote(Note note) {
-        db.collection("notes")
-                .document()
-                .set(note);
-        mDao.insertData(note);
+        //TODO: Save the Note to Firebase Firestore
+        mNotesDao.insertData(note);
     }
 
-    public void updateNote(Note note){
-        mDao.updateData(note);
+    public void updateNote(Note note) {
+        mNotesDao.updateData(note);
     }
 
     public void deleteNote(Note note) {
-        mDao.deleteData(note);
+        mNotesDao.deleteData(note);
     }
 }

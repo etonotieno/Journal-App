@@ -15,8 +15,9 @@ package com.edoubletech.journalapp.di;
 
 import android.app.Application;
 
-import com.edoubletech.journalapp.data.NotesRepository;
+import com.edoubletech.journalapp.data.MainRepository;
 import com.edoubletech.journalapp.data.dao.NotesDao;
+import com.edoubletech.journalapp.data.dao.UserDao;
 import com.edoubletech.journalapp.data.db.NotesDatabase;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 
@@ -27,11 +28,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class RoomModule {
+public class ApplicationModule {
 
     private Application mApp;
 
-    public RoomModule(Application application) {
+    public ApplicationModule(Application application) {
         mApp = application;
     }
 
@@ -52,13 +53,19 @@ public class RoomModule {
 
     @Singleton
     @Provides
-    NotesRepository provideNotesRepository(NotesDao dao) {
-        return new NotesRepository(dao);
+    UserDao provideUserDao(NotesDatabase db){
+        return db.userDao();
     }
 
     @Singleton
     @Provides
-    ViewModelFactory provideViewModelFactory(NotesRepository repository) {
+    MainRepository provideNotesRepository(NotesDao notesDao, UserDao userDao) {
+        return new MainRepository(notesDao, userDao);
+    }
+
+    @Singleton
+    @Provides
+    ViewModelFactory provideViewModelFactory(MainRepository repository) {
         return new ViewModelFactory(repository);
     }
 }
