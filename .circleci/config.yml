@@ -20,13 +20,6 @@ jobs:
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
-          # Google Services
-      - run:
-          name: Export Google Services key environment variable
-          command: echo 'export GOOGLE_SERVICES_KEY="$GOOGLE_SERVICES_KEY"' >> $BASH_ENV
-      - run:
-          name: Decode Google Services key
-          command: echo $GOOGLE_SERVICES_KEY | base64 -di > app/google-services.json
       - save_cache:
           paths:
             - ~/.gradle

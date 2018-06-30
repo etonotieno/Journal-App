@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "325690686443",
+    "firebase_url": "https://journal-app-394f4.firebaseio.com",
+    "project_id": "journal-app-394f4",
+    "storage_bucket": "journal-app-394f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325690686443:android:31d29fff945d533b",
+        "android_client_info": {
+          "package_name": "com.edoubletech.journalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325690686443-oe85ga67o535vk0l4gugdo5tdl03ch78.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edoubletech.journalapp",
+            "certificate_hash": "3e453a4d7d3a6e3f4fd633a81fcfce1189a58ed8"
+          }
+        },
+        {
+          "client_id": "325690686443-r6l38n681o960dgj7r34an5qs0d2j6nq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdJiWP0II_DLwg22QJXyh6_SopCaSFYog"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325690686443-r6l38n681o960dgj7r34an5qs0d2j6nq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
