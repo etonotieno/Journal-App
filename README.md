@@ -1,4 +1,4 @@
-# Journal-App [![Build Status](https://travis-ci.org/CodeZilla7/Journal-App.svg?branch=develop)](https://travis-ci.org/CodeZilla7/Journal-App)
+# Journal App
 This project is the final Andela Learning Community 3.0 challenge that allows a user to to pen down 
 their thoughts and feelings.
 
