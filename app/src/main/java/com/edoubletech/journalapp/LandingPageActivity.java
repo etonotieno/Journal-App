@@ -28,7 +28,7 @@ public class LandingPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-        findViewById(R.id.skipBtn).setOnClickListener(view -> {
+        findViewById(R.id.gotItBtn).setOnClickListener(view -> {
             Intent intent = new Intent(LandingPageActivity.this,
                     JournalSettings.isUserLoggedIn() ? NavHostActivity.class : LoginActivity.class);
             startActivity(intent);

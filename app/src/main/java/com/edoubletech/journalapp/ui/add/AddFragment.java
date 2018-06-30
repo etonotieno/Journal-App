@@ -16,6 +16,7 @@ package com.edoubletech.journalapp.ui.add;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -54,6 +55,16 @@ public class AddFragment extends Fragment {
     @Inject
     ViewModelFactory factory;
 
+    private boolean mNoteHasChanged = false;
+
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mNoteHasChanged = true;
+            return false;
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +77,9 @@ public class AddFragment extends Fragment {
         descriptionLayout = view.findViewById(R.id.descriptionLayout);
         titleEditText = view.findViewById(R.id.titleEditText);
         titleLayout = view.findViewById(R.id.titleLayout);
+
+        descriptionEditText.setOnTouchListener(mTouchListener);
+        titleEditText.setOnTouchListener(mTouchListener);
         return view;
     }
 

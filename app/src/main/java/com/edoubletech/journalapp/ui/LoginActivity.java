@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-
         // Check if user is logged in
         if (JournalSettings.isUserLoggedIn()) {
             startActivity(new Intent(LoginActivity.this, NavHostActivity.class));
@@ -95,13 +94,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     GoogleSignInAccount acct = result.getSignInAccount();
                     assert acct != null;
                     String name = acct.getDisplayName();
+                    String id = acct.getId();
                     String imageUrl = String.valueOf(acct.getPhotoUrl());
                     String email = acct.getEmail();
-                    User user = new User(name, email, imageUrl);
+                    User user = new User(name, email, imageUrl, id);
                     userDao.insertData(user);
                     JournalSettings.setUserLoginStatus(true);
                     Intent intent = new Intent(this, NavHostActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     // Sign in failed
                     Toast.makeText(this, "Sign In Failed", Toast.LENGTH_SHORT).show();
