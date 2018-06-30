@@ -18,35 +18,47 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.edoubletech.journalapp.di.ApplicationComponent;
+import com.edoubletech.journalapp.di.ApplicationModule;
 import com.edoubletech.journalapp.di.DaggerApplicationComponent;
-import com.edoubletech.journalapp.di.RoomModule;
 import com.google.firebase.FirebaseApp;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 public class MyJournal extends MultiDexApplication {
 
     private ApplicationComponent appComponent;
+    private static MutableLiveData<Boolean> hasNetwork;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
+
+        hasNetwork = new MutableLiveData<>();
+
+        hasNetwork.setValue(hasNetwork());
+
+        JournalSettings.initialize(this);
 
         FirebaseApp.initializeApp(this);
 
-        MultiDex.install(this);
-
         appComponent = DaggerApplicationComponent
                 .builder()
-                .roomModule(new RoomModule(this))
+                .applicationModule(new ApplicationModule(this))
                 .build();
     }
 
-    public boolean hasNetwork() {
+    public Boolean hasNetwork() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = (cm != null) ? cm.getActiveNetworkInfo() : null;
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public static LiveData<Boolean> getNetworkStatus() {
+        return hasNetwork;
     }
 
     public ApplicationComponent getAppComponent() {

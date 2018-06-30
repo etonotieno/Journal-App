@@ -85,6 +85,7 @@ public class MainFragment extends Fragment {
                 Navigation.findNavController(button).navigate(R.id.mainToAddAction));
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

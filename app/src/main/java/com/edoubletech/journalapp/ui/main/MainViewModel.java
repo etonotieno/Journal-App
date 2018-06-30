@@ -13,7 +13,7 @@
 
 package com.edoubletech.journalapp.ui.main;
 
-import com.edoubletech.journalapp.data.NotesRepository;
+import com.edoubletech.journalapp.data.MainRepository;
 import com.edoubletech.journalapp.data.model.Note;
 
 import java.util.List;
@@ -23,12 +23,11 @@ import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
 
-    private NotesRepository mRepo;
+    private MainRepository mRepo;
 
-    public MainViewModel(NotesRepository repository) {
+    public MainViewModel(MainRepository repository) {
         mRepo = repository;
     }
-
 
     public LiveData<List<Note>> getListOfNotes() {
         return mRepo.getListOfNotes();

@@ -13,17 +13,109 @@
 
 package com.edoubletech.journalapp.ui;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.data.dao.UserDao;
+import com.edoubletech.journalapp.data.model.User;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
-public class NavHostActivity extends AppCompatActivity {
+public class NavHostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+
+    @Inject
+    ViewModelFactory factory;
+    @Inject
+    UserDao userDao;
+
+    NavHostViewModel viewModel;
+    private User user;
+    private GoogleApiClient mApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((MyJournal) getApplication()).getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_host);
+        viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
+
+        user = viewModel.getUser();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem profileIcon = menu.findItem(R.id.profile_icon);
+        Glide.with(this)
+                .asBitmap()
+                .load(user.getImageUrl())
+                .apply(RequestOptions.circleCropTransform())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        profileIcon.setIcon(new BitmapDrawable(getResources(), resource));
+                    }
+                });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.profile_icon) {
+            // Handle a click on the profile icon
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private void logoutUser() {
+        Auth.GoogleSignInApi.signOut(mApiClient)
+                .setResultCallback(status -> {
+                    userDao.deleteData(user);
+
+                    // Make the user go back to the LoginActivity
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
     }
 }
