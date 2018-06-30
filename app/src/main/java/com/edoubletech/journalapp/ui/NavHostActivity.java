@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.edoubletech.journalapp.JournalSettings;
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.dao.UserDao;
@@ -37,6 +38,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -97,7 +99,7 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         int id = item.getItemId();
         if (id == R.id.profile_icon) {
             // Handle a click on the profile icon
-
+            showLogoutConfirmationDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -107,11 +109,28 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
 
     }
 
+
+    private void showLogoutConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you want to log out?");
+        builder.setPositiveButton("Log Out", (dialog, id) -> logoutUser());
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     private void logoutUser() {
         Auth.GoogleSignInApi.signOut(mApiClient)
                 .setResultCallback(status -> {
-                    userDao.deleteData(user);
 
+                    JournalSettings.setUserLoginStatus(false);
+
+                    userDao.deleteData(user);
                     // Make the user go back to the LoginActivity
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);

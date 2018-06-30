@@ -50,7 +50,7 @@ public class AddFragment extends Fragment {
     private AddViewModel mViewModel;
     TextInputEditText descriptionEditText, titleEditText;
     TextInputLayout descriptionLayout, titleLayout;
-    MaterialButton saveButton;
+    MaterialButton saveButton, updateButton;
     @Inject
     ViewModelFactory factory;
 
@@ -61,6 +61,7 @@ public class AddFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
         saveButton = view.findViewById(R.id.saveButton);
+        updateButton = view.findViewById(R.id.updateButton);
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
         descriptionLayout = view.findViewById(R.id.descriptionLayout);
         titleEditText = view.findViewById(R.id.titleEditText);
@@ -75,11 +76,13 @@ public class AddFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this, factory).get(AddViewModel.class);
         Bundle bundle = getArguments();
 
-        if (bundle != null) {
+        if (bundle != null && bundle.containsKey("noteId")) {
             // TODO : Add an update functionality
             int noteId = bundle.getInt("NOTES_ID");
             mViewModel.getNoteById(noteId).observe(this, noteData -> {
                 if (noteData != null) {
+                    saveButton.setVisibility(View.GONE);
+                    updateButton.setVisibility(View.VISIBLE);
                     titleEditText.setText(noteData.getTitle());
                     descriptionEditText.setText(noteData.getDescription());
                 }

@@ -50,7 +50,6 @@ public class MainRepository {
     }
 
     public void addNote(Note note) {
-        //TODO: Save the Note to Firebase Firestore
         mNotesDao.insertData(note);
     }
 
