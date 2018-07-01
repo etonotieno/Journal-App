@@ -23,6 +23,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        app:cardBackgroundColor="@color/grey_300"
         app:cardCornerRadius="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,21 +39,49 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/nameCircleTextView"
+                app:layout_constraintStart_toEndOf="@+id/nameCircleTextView"
                 app:layout_constraintTop_toBottomOf="@+id/noteTitleTextView"
+                app:layout_constraintVertical_bias="0.0"
                 tools:text="14/06/2018" />
 
             <TextView
                 android:id="@+id/noteTitleTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="8dp"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/nameCircleTextView"
+                app:layout_constraintTop_toTopOf="@+id/nameCircleTextView"
                 tools:text="Android Meetup at iHub" />
+
+            <TextView
+                android:id="@+id/nameCircleTextView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/name_circle"
+                android:gravity="center"
+                android:text="A"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/timeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/noteTitleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/noteTitleTextView"
+                tools:text="4:38 PM" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -72,6 +72,7 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         notes = viewModel.getNote(id);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestId()
                 .requestEmail()
                 .build();
 
@@ -117,7 +118,6 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
 
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

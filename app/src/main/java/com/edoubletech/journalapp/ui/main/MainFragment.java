@@ -22,7 +22,7 @@ import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import javax.inject.Inject;
 
@@ -58,7 +58,7 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MaterialButton button = view.findViewById(R.id.addNoteButton);
+        FloatingActionButton button = view.findViewById(R.id.addNoteFab);
         RecyclerView recyclerView = view.findViewById(R.id.notesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);

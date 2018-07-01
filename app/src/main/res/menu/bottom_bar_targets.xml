@@ -25,4 +25,10 @@
         android:icon="@drawable/ic_calendar"
         android:title="Calendar"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/addNote"
+        android:icon="@drawable/ic_add_note"
+        android:title="Add"
+        app:showAsAction="ifRoom" />
 </menu>

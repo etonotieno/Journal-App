@@ -16,17 +16,16 @@ package com.edoubletech.journalapp.ui.add;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MultiAutoCompleteTextView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -49,37 +48,21 @@ public class AddFragment extends Fragment {
     }
 
     private AddViewModel mViewModel;
-    TextInputEditText descriptionEditText, titleEditText;
-    TextInputLayout descriptionLayout, titleLayout;
-    MaterialButton saveButton, updateButton;
+    MultiAutoCompleteTextView descriptionEditText;
+    TextInputEditText titleEditText;
+    FloatingActionButton saveFab;
     @Inject
     ViewModelFactory factory;
-
-    private boolean mNoteHasChanged = false;
-
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mNoteHasChanged = true;
-            return false;
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        saveButton = view.findViewById(R.id.saveButton);
-        updateButton = view.findViewById(R.id.updateButton);
+        saveFab = view.findViewById(R.id.saveFab);
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
-        descriptionLayout = view.findViewById(R.id.descriptionLayout);
         titleEditText = view.findViewById(R.id.titleEditText);
-        titleLayout = view.findViewById(R.id.titleLayout);
 
-        descriptionEditText.setOnTouchListener(mTouchListener);
-        titleEditText.setOnTouchListener(mTouchListener);
         return view;
     }
 
@@ -90,13 +73,10 @@ public class AddFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this, factory).get(AddViewModel.class);
         Bundle bundle = getArguments();
 
-        if (bundle != null && bundle.containsKey("noteId")) {
-            // TODO : Add an update functionality
+        if (bundle != null) {
             int noteId = bundle.getInt("NOTES_ID");
             mViewModel.getNoteById(noteId).observe(this, noteData -> {
                 if (noteData != null) {
-                    saveButton.setVisibility(View.GONE);
-                    updateButton.setVisibility(View.VISIBLE);
                     titleEditText.setText(noteData.getTitle());
                     descriptionEditText.setText(noteData.getDescription());
                 }
@@ -105,14 +85,13 @@ public class AddFragment extends Fragment {
 
         Date date = Calendar.getInstance().getTime();
 
-        saveButton.setOnClickListener(v -> {
-            // TODO : Improve the data validation step
+        saveFab.setOnClickListener(v -> {
             if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
                 String title = titleEditText.getText().toString().trim();
                 String description = descriptionEditText.getText().toString().trim();
                 Note note = new Note(title, description, date);
                 mViewModel.addNote(note);
-                Navigation.findNavController(saveButton).navigate(R.id.backToSourceAction);
+                Navigation.findNavController(saveFab).navigate(R.id.backToSourceAction);
             }
         });
     }
