@@ -24,6 +24,7 @@ import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
+import com.edoubletech.journalapp.ui.main.MainFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -35,7 +36,6 @@ import javax.inject.Inject;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 
 
 /**
@@ -74,7 +74,7 @@ public class AddFragment extends Fragment {
         Bundle bundle = getArguments();
 
         if (bundle != null) {
-            int noteId = bundle.getInt("NOTES_ID");
+            int noteId = bundle.getInt("NOTE_ID");
             mViewModel.getNoteById(noteId).observe(this, noteData -> {
                 if (noteData != null) {
                     titleEditText.setText(noteData.getTitle());
@@ -91,7 +91,10 @@ public class AddFragment extends Fragment {
                 String description = descriptionEditText.getText().toString().trim();
                 Note note = new Note(title, description, date);
                 mViewModel.addNote(note);
-                Navigation.findNavController(saveFab).navigate(R.id.backToSourceAction);
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction().replace(R.id.fragment_container, new MainFragment())
+                        .commit();
             }
         });
     }

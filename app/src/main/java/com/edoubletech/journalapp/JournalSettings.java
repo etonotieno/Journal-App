@@ -33,7 +33,7 @@ public class JournalSettings {
                 .apply();
     }
 
-    public static boolean isUserLoggedIn() {
+    public static boolean userIsLoggedIn() {
         return preferences.getBoolean(IS_USER_LOGGED_IN, false);
     }
 }

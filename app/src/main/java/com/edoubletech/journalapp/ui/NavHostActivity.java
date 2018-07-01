@@ -14,39 +14,33 @@
 package com.edoubletech.journalapp.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.edoubletech.journalapp.JournalSettings;
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.dao.NotesDao;
 import com.edoubletech.journalapp.data.dao.UserDao;
-import com.edoubletech.journalapp.data.model.Note;
-import com.edoubletech.journalapp.data.model.User;
+import com.edoubletech.journalapp.ui.add.AddFragment;
+import com.edoubletech.journalapp.ui.main.MainFragment;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-public class NavHostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class NavHostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     ViewModelFactory factory;
@@ -56,9 +50,11 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     NotesDao notesDao;
 
     NavHostViewModel viewModel;
-    private User user;
-    private List<Note> notes;
+//    private User user;
+//    private List<Note> notes;
     private GoogleApiClient mApiClient;
+    private BottomNavigationView bottomNav;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +62,13 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_host);
         viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
+//
+//        user = viewModel.getUser();
+//        String id = user.getId();
+//        notes = viewModel.getNote(id);
 
-        user = viewModel.getUser();
-        String id = user.getId();
-        notes = viewModel.getNote(id);
+        bottomNav = findViewById(R.id.bottomNavView);
+        bottomNav.setOnNavigationItemSelectedListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestId()
@@ -91,16 +90,16 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem profileIcon = menu.findItem(R.id.profile_icon);
-        Glide.with(this)
-                .asBitmap()
-                .load(user.getImageUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        profileIcon.setIcon(new BitmapDrawable(getResources(), resource));
-                    }
-                });
+//        Glide.with(this)
+//                .asBitmap()
+//                .load(user.getImageUrl())
+//                .apply(RequestOptions.circleCropTransform())
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        profileIcon.setIcon(new BitmapDrawable(getResources(), resource));
+//                    }
+//                });
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -138,15 +137,38 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
                 .setResultCallback(status -> {
 
                     JournalSettings.setUserLoginStatus(false);
-
-                    userDao.deleteData(user);
-
-                    notesDao.deleteNotes(notes);
+//
+//                    userDao.deleteData(user);
+//
+//                    notesDao.deleteNotes(notes);
 
                     // Make the user go back to the LoginActivity
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        FragmentManager manager = getSupportFragmentManager();
+        switch (menuItem.getItemId()) {
+            case R.id.home_button:
+                manager.beginTransaction()
+                        .replace(R.id.fragment_container, new MainFragment())
+                        .commit();
+                return true;
+            case R.id.calendar:
+                manager.beginTransaction()
+                        .replace(R.id.fragment_container, new CalendarFragment())
+                        .commit();
+                return true;
+            case R.id.addNote:
+                manager.beginTransaction()
+                        .replace(R.id.fragment_container, new AddFragment())
+                        .commit();
+                return true;
+        }
+        return false;
     }
 }

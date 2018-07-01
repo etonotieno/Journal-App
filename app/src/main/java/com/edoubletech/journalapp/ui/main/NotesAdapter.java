@@ -15,7 +15,6 @@ package com.edoubletech.journalapp.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,12 @@ import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,9 +47,11 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
             return oldItem == newItem;
         }
     };
+    private final NoteClickListener listener;
 
-    public NotesAdapter() {
+    public NotesAdapter(NoteClickListener listener) {
         super(DIFF_CALLBACK);
+        this.listener = listener;
     }
 
     @NonNull
@@ -67,11 +68,14 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
 
         String title = currentNote.getTitle();
         holder.titleTextView.setText(title);
-        holder.nameTextView.setText(title.charAt(0));
+        String first = String.valueOf(title.charAt(0));
+        holder.nameTextView.setText(first);
 
         Date date = currentNote.getDate();
         GradientDrawable drawable = (GradientDrawable) holder.nameTextView.getBackground();
-        int dayOfTheWeek = date.getDay();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int dayOfTheWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int backgroundColor = getBackgroundColor(dayOfTheWeek, holder.itemView.getContext());
         drawable.setColor(backgroundColor);
 
@@ -117,6 +121,11 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         return ContextCompat.getColor(context, backgroundColor);
     }
 
+    public interface NoteClickListener{
+
+        void OnNoteItemClick(int itemId);
+    }
+
     class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView dateTextView, titleTextView, timeTextView, nameTextView;
@@ -133,9 +142,7 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         @Override
         public void onClick(View view) {
             Note note = (Note) itemView.getTag();
-            Bundle bundle = new Bundle();
-            bundle.putInt("NOTES_ID", note.getId());
-            Navigation.findNavController(itemView).navigate(R.id.mainToAddAction, bundle);
+            listener.OnNoteItemClick(note.getId());
         }
     }
 }

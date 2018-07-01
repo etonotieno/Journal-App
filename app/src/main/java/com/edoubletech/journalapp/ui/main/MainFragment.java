@@ -22,7 +22,7 @@ import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.edoubletech.journalapp.ui.add.AddFragment;
 
 import javax.inject.Inject;
 
@@ -30,18 +30,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements NotesAdapter.NoteClickListener {
 
     public MainFragment() {
     }
 
     private MainViewModel mViewModel;
-    private NotesAdapter mAdapter = new NotesAdapter();
+    private NotesAdapter mAdapter = new NotesAdapter(this);
 
     @Inject
     ViewModelFactory factory;
@@ -58,7 +57,6 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FloatingActionButton button = view.findViewById(R.id.addNoteFab);
         RecyclerView recyclerView = view.findViewById(R.id.notesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
@@ -80,9 +78,6 @@ public class MainFragment extends Fragment {
         };
 
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
-
-        button.setOnClickListener(v ->
-                Navigation.findNavController(button).navigate(R.id.mainToAddAction));
     }
 
 
@@ -96,4 +91,15 @@ public class MainFragment extends Fragment {
         });
     }
 
+    @Override
+    public void OnNoteItemClick(int itemId) {
+        Bundle args = new Bundle();
+        AddFragment fragment = new AddFragment();
+        args.putInt("NOTE_ID", itemId);
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
 }

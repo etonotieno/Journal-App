@@ -76,8 +76,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is logged in
-        if (JournalSettings.isUserLoggedIn()) {
+        // Check if user is logged in. If true then start the NavHostActivity
+        if (JournalSettings.userIsLoggedIn()) {
             startActivity(new Intent(LoginActivity.this, NavHostActivity.class));
             finish();
         }

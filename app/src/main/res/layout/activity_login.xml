@@ -42,7 +42,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="casual"
-        android:text="Welcome to My Journal where you can add your thoughts and views for a day. \n\nThink of it as a handy dandy Diary right on your phone."
+        android:text="@string/welcome_text"
         android:textAlignment="center"
         android:textColor="@color/text"
         android:textSize="14sp"
