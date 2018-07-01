@@ -19,12 +19,11 @@ import android.content.SharedPreferences;
 public class JournalSettings {
 
     private static final String SHARED_PREF_NAME = "journal";
-    private static final String FIRST_TIME_TO_LAUNCH = "firstTimeLaunch";
     private static final String IS_USER_LOGGED_IN = "userIsLoggedIn";
 
     private static SharedPreferences preferences;
 
-    public static void initialize(Context context) {
+    static void initialize(Context context) {
         preferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 
@@ -36,15 +35,5 @@ public class JournalSettings {
 
     public static boolean isUserLoggedIn() {
         return preferences.getBoolean(IS_USER_LOGGED_IN, false);
-    }
-
-    public static void setIsFirstTimeToLaunch(boolean firstTimeToLaunch){
-        preferences.edit()
-                .putBoolean(FIRST_TIME_TO_LAUNCH, firstTimeToLaunch)
-                .apply();
-    }
-
-    public static boolean isFirstTimeToLaunch(){
-        return preferences.getBoolean(FIRST_TIME_TO_LAUNCH, true);
     }
 }
