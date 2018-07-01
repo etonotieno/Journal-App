@@ -19,6 +19,7 @@ import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.data.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,6 +40,10 @@ public class MainRepository {
 
     public User getUser() {
         return mUserDao.getUser();
+    }
+
+    public LiveData<List<Note>> getListOfNotesByDate(Date date){
+        return mNotesDao.getNotesByDate(date);
     }
 
     public LiveData<List<Note>> getListOfNotes() {

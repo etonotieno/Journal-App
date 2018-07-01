@@ -11,18 +11,22 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.ui.main;
+package com.edoubletech.journalapp.ui.calendar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
-import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.edoubletech.journalapp.ui.add.AddFragment;
+import com.edoubletech.journalapp.ui.main.MainViewModel;
+import com.edoubletech.journalapp.ui.main.NotesAdapter;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -30,72 +34,57 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainFragment extends Fragment implements NotesAdapter.NoteClickListener {
+public class CalendarFragment extends Fragment implements CalendarView.OnDateChangeListener, NotesAdapter.NoteClickListener {
 
-    public MainFragment() {
-    }
+    public CalendarFragment() { }
 
-    private MainViewModel mViewModel;
-    private NotesAdapter mAdapter = new NotesAdapter(this);
-
+    CalendarView calendarView;
     @Inject
     ViewModelFactory factory;
+    MainViewModel mViewModel;
+    RecyclerView mRecyclerView;
+    private NotesAdapter adapter = new NotesAdapter(this);
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_main, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+        calendarView = view.findViewById(R.id.calendarView);
+        mRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(adapter);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        RecyclerView recyclerView = view.findViewById(R.id.notesRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(mAdapter);
-
-        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                  RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                Note note = (Note) viewHolder.itemView.getTag();
-                mViewModel.deleteNote(note);
-            }
-        };
-
-        new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
+        calendarView.setOnDateChangeListener(this);
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MyJournal) getActivity().getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, factory).get(MainViewModel.class);
-        mViewModel.getListOfNotes().observe(this, notes -> {
-            if (notes != null) mAdapter.submitList(notes);
+    }
+
+    @Override
+    public void onSelectedDayChange(CalendarView calendarView, int year, int month, int dayOfMonth) {
+        Date date = new Date(calendarView.getDate());
+        mViewModel.getListOfNotesByDate(date).observe(this, notes -> {
+            adapter.submitList(notes);
         });
     }
 
     @Override
     public void OnNoteItemClick(int noteId) {
         Bundle args = new Bundle();
-        AddFragment fragment = new AddFragment();
         args.putInt("NOTE_ID", noteId);
+        AddFragment fragment = new AddFragment();
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()

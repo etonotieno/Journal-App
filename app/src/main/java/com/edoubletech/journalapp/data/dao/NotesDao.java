@@ -15,6 +15,7 @@ package com.edoubletech.journalapp.data.dao;
 
 import com.edoubletech.journalapp.data.model.Note;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -33,6 +34,9 @@ public abstract class NotesDao implements BaseDao<Note> {
 
     @Query("SELECT * FROM notes_table WHERE user_id_child = :childId")
     public abstract List<Note> getNotes(String childId);
+
+    @Query("SELECT * FROM notes_table WHERE date = :date")
+    public abstract LiveData<List<Note>> getNotesByDate(Date date);
 
     @Delete
     public abstract void deleteNotes(List<Note> notes);

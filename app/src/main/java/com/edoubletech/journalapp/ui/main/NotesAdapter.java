@@ -13,7 +13,6 @@
 
 package com.edoubletech.journalapp.ui.main;
 
-import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,10 +28,17 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static java.util.Calendar.FRIDAY;
+import static java.util.Calendar.MONDAY;
+import static java.util.Calendar.SATURDAY;
+import static java.util.Calendar.SUNDAY;
+import static java.util.Calendar.THURSDAY;
+import static java.util.Calendar.TUESDAY;
+import static java.util.Calendar.WEDNESDAY;
 
 public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder> {
 
@@ -76,7 +82,7 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int dayOfTheWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int backgroundColor = getBackgroundColor(dayOfTheWeek, holder.itemView.getContext());
+        int backgroundColor = getBackgroundColor(dayOfTheWeek);
         drawable.setColor(backgroundColor);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy", Locale.getDefault());
@@ -90,40 +96,40 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         holder.itemView.setTag(currentNote);
     }
 
-    private int getBackgroundColor(int dayOfWeek, Context context) {
+    private int getBackgroundColor(int dayOfWeek) {
         int backgroundColor;
         switch (dayOfWeek) {
-            case 0:
+            case SUNDAY:
                 backgroundColor = R.color.sunday;
                 break;
-            case 1:
+            case MONDAY:
                 backgroundColor = R.color.monday;
                 break;
-            case 2:
+            case TUESDAY:
                 backgroundColor = R.color.tuesday;
                 break;
-            case 3:
+            case WEDNESDAY:
                 backgroundColor = R.color.wednesday;
                 break;
-            case 4:
+            case THURSDAY:
                 backgroundColor = R.color.thursday;
                 break;
-            case 5:
+            case FRIDAY:
                 backgroundColor = R.color.friday;
                 break;
-            case 6:
+            case SATURDAY:
                 backgroundColor = R.color.saturday;
                 break;
             default:
                 backgroundColor = R.color.colorAccent;
                 break;
         }
-        return ContextCompat.getColor(context, backgroundColor);
+        return backgroundColor;
     }
 
-    public interface NoteClickListener{
+    public interface NoteClickListener {
 
-        void OnNoteItemClick(int itemId);
+        void OnNoteItemClick(int noteId);
     }
 
     class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

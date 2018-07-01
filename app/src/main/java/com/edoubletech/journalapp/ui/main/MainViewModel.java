@@ -16,6 +16,7 @@ package com.edoubletech.journalapp.ui.main;
 import com.edoubletech.journalapp.data.MainRepository;
 import com.edoubletech.journalapp.data.model.Note;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -31,6 +32,10 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<List<Note>> getListOfNotes() {
         return mRepo.getListOfNotes();
+    }
+
+    public LiveData<List<Note>> getListOfNotesByDate(Date date) {
+        return mRepo.getListOfNotesByDate(date);
     }
 
     public void deleteNote(Note note) {

@@ -13,7 +13,6 @@
 
 package com.edoubletech.journalapp.ui.add;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,15 +36,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AddFragment extends Fragment {
 
 
-    public AddFragment() {
-    }
+    public AddFragment() { }
 
     private AddViewModel mViewModel;
     MultiAutoCompleteTextView descriptionEditText;
@@ -92,8 +86,9 @@ public class AddFragment extends Fragment {
                 Note note = new Note(title, description, date);
                 mViewModel.addNote(note);
 
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction().replace(R.id.fragment_container, new MainFragment())
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.fragment_container, new MainFragment())
                         .commit();
             }
         });

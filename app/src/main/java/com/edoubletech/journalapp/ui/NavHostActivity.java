@@ -14,16 +14,25 @@
 package com.edoubletech.journalapp.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.edoubletech.journalapp.JournalSettings;
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.dao.NotesDao;
 import com.edoubletech.journalapp.data.dao.UserDao;
+import com.edoubletech.journalapp.data.model.Note;
+import com.edoubletech.journalapp.data.model.User;
 import com.edoubletech.journalapp.ui.add.AddFragment;
+import com.edoubletech.journalapp.ui.calendar.CalendarFragment;
 import com.edoubletech.journalapp.ui.main.MainFragment;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -31,12 +40,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 public class NavHostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
@@ -50,8 +62,8 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     NotesDao notesDao;
 
     NavHostViewModel viewModel;
-//    private User user;
-//    private List<Note> notes;
+    private User user;
+    private List<Note> notes;
     private GoogleApiClient mApiClient;
     private BottomNavigationView bottomNav;
 
@@ -62,10 +74,10 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_host);
         viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
-//
-//        user = viewModel.getUser();
-//        String id = user.getId();
-//        notes = viewModel.getNote(id);
+
+        user = viewModel.getUser();
+        String id = user.getId();
+        notes = viewModel.getNote(id);
 
         bottomNav = findViewById(R.id.bottomNavView);
         bottomNav.setOnNavigationItemSelectedListener(this);
@@ -90,16 +102,16 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem profileIcon = menu.findItem(R.id.profile_icon);
-//        Glide.with(this)
-//                .asBitmap()
-//                .load(user.getImageUrl())
-//                .apply(RequestOptions.circleCropTransform())
-//                .into(new SimpleTarget<Bitmap>() {
-//                    @Override
-//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        profileIcon.setIcon(new BitmapDrawable(getResources(), resource));
-//                    }
-//                });
+        Glide.with(this)
+                .asBitmap()
+                .load(user.getImageUrl())
+                .apply(RequestOptions.circleCropTransform())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        profileIcon.setIcon(new BitmapDrawable(getResources(), resource));
+                    }
+                });
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -137,12 +149,12 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
                 .setResultCallback(status -> {
 
                     JournalSettings.setUserLoginStatus(false);
-//
-//                    userDao.deleteData(user);
-//
-//                    notesDao.deleteNotes(notes);
 
-                    // Make the user go back to the LoginActivity
+                    userDao.deleteData(user);
+
+                    notesDao.deleteNotes(notes);
+
+                    // Make the user go ic_background to the LoginActivity
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     finish();
@@ -151,24 +163,23 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        FragmentManager manager = getSupportFragmentManager();
         switch (menuItem.getItemId()) {
             case R.id.home_button:
-                manager.beginTransaction()
-                        .replace(R.id.fragment_container, new MainFragment())
-                        .commit();
+                loadFragment(new MainFragment());
                 return true;
             case R.id.calendar:
-                manager.beginTransaction()
-                        .replace(R.id.fragment_container, new CalendarFragment())
-                        .commit();
+                loadFragment(new CalendarFragment());
                 return true;
             case R.id.addNote:
-                manager.beginTransaction()
-                        .replace(R.id.fragment_container, new AddFragment())
-                        .commit();
+                loadFragment(new AddFragment());
                 return true;
         }
         return false;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 }

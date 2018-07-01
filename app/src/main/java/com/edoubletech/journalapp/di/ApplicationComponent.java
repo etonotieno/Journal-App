@@ -13,6 +13,7 @@
 
 package com.edoubletech.journalapp.di;
 
+import com.edoubletech.journalapp.ui.calendar.CalendarFragment;
 import com.edoubletech.journalapp.ui.LoginActivity;
 import com.edoubletech.journalapp.ui.NavHostActivity;
 import com.edoubletech.journalapp.ui.add.AddFragment;
@@ -29,6 +30,8 @@ public interface ApplicationComponent {
     void inject(AddFragment addFragment);
 
     void inject(MainFragment mainFragment);
+
+    void inject(CalendarFragment fragment);
 
     void inject(NavHostActivity navHostActivity);
 
