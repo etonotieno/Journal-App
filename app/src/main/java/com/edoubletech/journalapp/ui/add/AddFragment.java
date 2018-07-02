@@ -22,6 +22,7 @@ import android.widget.MultiAutoCompleteTextView;
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
+import com.edoubletech.journalapp.ui.NavHostActivity;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.edoubletech.journalapp.ui.main.MainFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -87,9 +88,10 @@ public class AddFragment extends Fragment {
                 mViewModel.addNote(note);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .addToBackStack(null)
                         .replace(R.id.fragment_container, new MainFragment())
                         .commit();
+
+                NavHostActivity.bottomNav.setSelectedItemId(R.id.home_button);
             }
         });
     }

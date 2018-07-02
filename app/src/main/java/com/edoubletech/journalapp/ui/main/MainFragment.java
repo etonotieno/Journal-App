@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.model.Note;
+import com.edoubletech.journalapp.ui.NavHostActivity;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.edoubletech.journalapp.ui.add.AddFragment;
 
@@ -101,5 +102,6 @@ public class MainFragment extends Fragment implements NotesAdapter.NoteClickList
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+        NavHostActivity.bottomNav.setSelectedItemId(R.id.addNote);
     }
 }

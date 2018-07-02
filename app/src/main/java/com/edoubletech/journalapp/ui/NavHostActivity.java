@@ -66,7 +66,7 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     private User user;
     private List<Note> notes;
     private GoogleApiClient mApiClient;
-    private BottomNavigationView bottomNav;
+    public static BottomNavigationView bottomNav;
 
 
     @Override

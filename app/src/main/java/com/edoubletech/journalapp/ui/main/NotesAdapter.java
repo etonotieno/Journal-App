@@ -13,6 +13,7 @@
 
 package com.edoubletech.journalapp.ui.main;
 
+import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +84,7 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int dayOfTheWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int backgroundColor = getBackgroundColor(dayOfTheWeek);
+        int backgroundColor = getBackgroundColor(dayOfTheWeek, holder.itemView.getContext());
         drawable.setColor(backgroundColor);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy", Locale.getDefault());
@@ -96,7 +98,7 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
         holder.itemView.setTag(currentNote);
     }
 
-    private int getBackgroundColor(int dayOfWeek) {
+    private int getBackgroundColor(int dayOfWeek, Context context) {
         int backgroundColor;
         switch (dayOfWeek) {
             case SUNDAY:
@@ -124,7 +126,7 @@ public class NotesAdapter extends ListAdapter<Note, NotesAdapter.NotesViewHolder
                 backgroundColor = R.color.colorAccent;
                 break;
         }
-        return backgroundColor;
+        return ContextCompat.getColor(context, backgroundColor);
     }
 
     public interface NoteClickListener {
