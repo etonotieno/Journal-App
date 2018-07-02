@@ -26,6 +26,7 @@ import com.edoubletech.journalapp.ui.add.AddFragment;
 import com.edoubletech.journalapp.ui.main.MainViewModel;
 import com.edoubletech.journalapp.ui.main.NotesAdapter;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -55,6 +56,10 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
         calendarView = view.findViewById(R.id.calendarView);
         mRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        calendarView.setFirstDayOfWeek(Calendar.SUNDAY);
+        calendarView.setDate(System.currentTimeMillis());
+        calendarView.setMinDate(1530467006);
+        calendarView.setMaxDate(1562003006);
         mRecyclerView.setAdapter(adapter);
         return view;
     }

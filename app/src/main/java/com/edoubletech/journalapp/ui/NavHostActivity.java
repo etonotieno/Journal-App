@@ -19,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -73,6 +74,10 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         ((MyJournal) getApplication()).getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_host);
+
+        // If this is the first time opening the app, load the MainFragment
+        if (savedInstanceState == null) loadFragment(new MainFragment());
+
         viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
 
         user = viewModel.getUser();
@@ -145,20 +150,28 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     private void logoutUser() {
-        Auth.GoogleSignInApi.signOut(mApiClient)
-                .setResultCallback(status -> {
+        Auth.GoogleSignInApi.signOut(mApiClient).setResultCallback(status -> {
+            if (status.isSuccess()) {
 
-                    JournalSettings.setUserLoginStatus(false);
+                JournalSettings.setUserLoginStatus(false);
 
-                    userDao.deleteData(user);
+                userDao.deleteData(user);
 
-                    notesDao.deleteNotes(notes);
+                notesDao.deleteNotes(notes);
 
-                    // Make the user go ic_background to the LoginActivity
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
+                // Make the user go ic_background to the LoginActivity
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            } else if (status.isCanceled()) {
+                Toast.makeText(this, "Logging out was cancelled. Try again",
+                        Toast.LENGTH_SHORT).show();
+
+            } else if (status.isInterrupted())
+                Toast.makeText(this, "Logging out was interrupted Try again",
+                        Toast.LENGTH_SHORT).show();
+
+        });
     }
 
     @Override
