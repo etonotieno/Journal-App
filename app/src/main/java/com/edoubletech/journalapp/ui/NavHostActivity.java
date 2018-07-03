@@ -30,7 +30,6 @@ import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.dao.NotesDao;
 import com.edoubletech.journalapp.data.dao.UserDao;
-import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.data.model.User;
 import com.edoubletech.journalapp.ui.add.AddFragment;
 import com.edoubletech.journalapp.ui.calendar.CalendarFragment;
@@ -40,8 +39,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -63,10 +60,9 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     NotesDao notesDao;
 
     NavHostViewModel viewModel;
-    private User user;
-    private List<Note> notes;
     private GoogleApiClient mApiClient;
-    public static BottomNavigationView bottomNav;
+    public BottomNavigationView bottomNav;
+    private User user;
 
 
     @Override
@@ -81,8 +77,6 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
 
         user = viewModel.getUser();
-        String id = user.getId();
-        notes = viewModel.getNote(id);
 
         bottomNav = findViewById(R.id.bottomNavView);
         bottomNav.setOnNavigationItemSelectedListener(this);
@@ -154,10 +148,6 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
             if (status.isSuccess()) {
 
                 JournalSettings.setUserLoginStatus(false);
-
-                userDao.deleteData(user);
-
-                notesDao.deleteNotes(notes);
 
                 // Make the user go ic_background to the LoginActivity
                 Intent intent = new Intent(this, LoginActivity.class);

@@ -31,7 +31,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
 
@@ -45,9 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Inject
     UserDao userDao;
 
-    private SignInButton mGoogleLoginButton;
     private GoogleApiClient mApiClient;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +54,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         setContentView(R.layout.activity_login);
 
-        mGoogleLoginButton = findViewById(R.id.googleLoginBtn);
-
-        mAuth = FirebaseAuth.getInstance();
+        SignInButton googleLoginBtn = findViewById(R.id.googleLoginBtn);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-        mGoogleLoginButton.setOnClickListener(this);
+        googleLoginBtn.setOnClickListener(this);
 
         mApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -95,10 +90,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     GoogleSignInAccount acct = result.getSignInAccount();
                     assert acct != null;
                     String name = acct.getDisplayName();
-                    String id = acct.getId();
                     String imageUrl = String.valueOf(acct.getPhotoUrl());
                     String email = acct.getEmail();
-                    User user = new User(name, email, imageUrl, id);
+                    User user = new User(name, email, imageUrl);
                     userDao.insertData(user);
                     JournalSettings.setUserLoginStatus(true);
                     Intent intent = new Intent(this, NavHostActivity.class);
@@ -106,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     finish();
                 } else {
                     // Sign in failed
-                    Toast.makeText(this, "Sign In Failed", Toast.LENGTH_SHORT).show();
+                    loadToast("Logging in failed.");
                 }
             }
         }
@@ -126,5 +120,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("Login Error", connectionResult.getErrorMessage());
+    }
+
+    private void loadToast(String message) {
+        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

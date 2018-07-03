@@ -21,6 +21,7 @@ import android.widget.MultiAutoCompleteTextView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.data.Const;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.NavHostActivity;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
@@ -40,9 +41,10 @@ import androidx.lifecycle.ViewModelProviders;
 public class AddFragment extends Fragment {
 
 
-    public AddFragment() { }
+    public AddFragment() {
+    }
 
-    private AddViewModel mViewModel;
+    AddViewModel mViewModel;
     MultiAutoCompleteTextView descriptionEditText;
     TextInputEditText titleEditText;
     FloatingActionButton saveFab;
@@ -66,10 +68,28 @@ public class AddFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ((MyJournal) getActivity().getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, factory).get(AddViewModel.class);
+
+        Date date = Calendar.getInstance().getTime();
         Bundle bundle = getArguments();
 
-        if (bundle != null) {
-            int noteId = bundle.getInt("NOTE_ID");
+        saveFab.setOnClickListener(v -> {
+            if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
+                String title = titleEditText.getText().toString().trim();
+                String description = descriptionEditText.getText().toString().trim();
+                Note note = new Note(title, description, date);
+
+                mViewModel.addNote(note);
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new MainFragment())
+                        .commit();
+
+                ((NavHostActivity) getActivity()).bottomNav.setSelectedItemId(R.id.home_button);
+            }
+        });
+
+        if (bundle != null && bundle.containsKey(Const.NOTE_ID_KEY)) {
+            int noteId = bundle.getInt(Const.NOTE_ID_KEY);
             mViewModel.getNoteById(noteId).observe(this, noteData -> {
                 if (noteData != null) {
                     titleEditText.setText(noteData.getTitle());
@@ -77,22 +97,5 @@ public class AddFragment extends Fragment {
                 }
             });
         }
-
-        Date date = Calendar.getInstance().getTime();
-
-        saveFab.setOnClickListener(v -> {
-            if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
-                String title = titleEditText.getText().toString().trim();
-                String description = descriptionEditText.getText().toString().trim();
-                Note note = new Note(title, description, date);
-                mViewModel.addNote(note);
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new MainFragment())
-                        .commit();
-
-                NavHostActivity.bottomNav.setSelectedItemId(R.id.home_button);
-            }
-        });
     }
 }

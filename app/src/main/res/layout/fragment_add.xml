@@ -74,7 +74,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/edit_txt"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toTopOf="@+id/saveFab"
         app:layout_constraintEnd_toEndOf="parent"

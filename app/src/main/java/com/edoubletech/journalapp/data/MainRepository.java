@@ -17,7 +17,6 @@ import com.edoubletech.journalapp.data.dao.NotesDao;
 import com.edoubletech.journalapp.data.dao.UserDao;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.data.model.User;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,6 @@ public class MainRepository {
 
     private final UserDao mUserDao;
     private NotesDao mNotesDao;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Inject
     public MainRepository(NotesDao notesDao, UserDao userDao) {
@@ -48,10 +46,6 @@ public class MainRepository {
 
     public LiveData<List<Note>> getListOfNotes() {
         return mNotesDao.getListOfNotes();
-    }
-
-    public List<Note> getNotes(String childId){
-        return mNotesDao.getNotes(childId);
     }
 
     public LiveData<Note> getNoteById(int id) {

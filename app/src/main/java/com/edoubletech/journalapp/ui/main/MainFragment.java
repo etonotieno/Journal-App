@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.data.Const;
 import com.edoubletech.journalapp.data.model.Note;
 import com.edoubletech.journalapp.ui.NavHostActivity;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
@@ -96,12 +97,12 @@ public class MainFragment extends Fragment implements NotesAdapter.NoteClickList
     public void OnNoteItemClick(int noteId) {
         Bundle args = new Bundle();
         AddFragment fragment = new AddFragment();
-        args.putInt("NOTE_ID", noteId);
+        args.putInt(Const.NOTE_ID_KEY, noteId);
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-        NavHostActivity.bottomNav.setSelectedItemId(R.id.addNote);
+        ((NavHostActivity) getActivity()).bottomNav.setSelectedItemId(R.id.addNote);
     }
 }

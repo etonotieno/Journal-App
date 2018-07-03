@@ -34,6 +34,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     @NonNull
     @Override
+    @SuppressWarnings("unchecked cast")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainViewModel.class))
             return (T) new MainViewModel(mRepo);

@@ -18,24 +18,14 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "notes_table", foreignKeys = {
-        @ForeignKey(
-                entity = User.class,
-                parentColumns = {"user_id"},
-                childColumns = {"user_id_child"},
-                onDelete = ForeignKey.CASCADE,
-                onUpdate = ForeignKey.CASCADE)
-})
+@Entity(tableName = "notes_table")
 public class Note {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int id;
-    @ColumnInfo(name = "user_id_child")
-    public String userId;
     @ColumnInfo(name = "note_tile")
     private String mTitle;
     @ColumnInfo(name = "description")

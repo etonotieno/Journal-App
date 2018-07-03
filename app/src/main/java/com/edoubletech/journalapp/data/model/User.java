@@ -21,10 +21,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "user_table")
 public class User {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "user_id")
-    private String id;
+    private int id;
     @ColumnInfo(name = "user_name")
     private String name;
     @ColumnInfo(name = "user_email")
@@ -32,15 +32,18 @@ public class User {
     @ColumnInfo(name = "user_image_url")
     private String imageUrl;
 
-    public User(String name, String email, String imageUrl, @NonNull String id) {
+    public User(String name, String email, String imageUrl) {
         this.name = name;
-        this.id = id;
         this.email = email;
         this.imageUrl = imageUrl;
     }
 
+    public void setId(int userId){
+        this.id = userId;
+    }
+
     @NonNull
-    public String getId() {
+    public int getId() {
         return id;
     }
 

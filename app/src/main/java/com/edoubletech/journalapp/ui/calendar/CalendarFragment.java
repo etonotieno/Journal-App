@@ -21,6 +21,7 @@ import android.widget.CalendarView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.data.Const;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.edoubletech.journalapp.ui.add.AddFragment;
 import com.edoubletech.journalapp.ui.main.MainViewModel;
@@ -88,7 +89,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public void OnNoteItemClick(int noteId) {
         Bundle args = new Bundle();
-        args.putInt("NOTE_ID", noteId);
+        args.putInt(Const.NOTE_ID_KEY, noteId);
         AddFragment fragment = new AddFragment();
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager()
