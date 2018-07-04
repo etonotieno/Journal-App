@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
@@ -38,11 +39,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MainFragment extends Fragment implements NotesAdapter.NoteClickListener {
 
+
     public MainFragment() {
     }
 
     private MainViewModel mViewModel;
     private NotesAdapter mAdapter = new NotesAdapter(this);
+    private TextView mEmptyView;
+    private RecyclerView recyclerView;
 
     @Inject
     ViewModelFactory factory;
@@ -59,7 +63,8 @@ public class MainFragment extends Fragment implements NotesAdapter.NoteClickList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = view.findViewById(R.id.notesRecyclerView);
+        mEmptyView = view.findViewById(R.id.emptyView);
+        recyclerView = view.findViewById(R.id.notesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
 
@@ -89,7 +94,13 @@ public class MainFragment extends Fragment implements NotesAdapter.NoteClickList
         ((MyJournal) getActivity().getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, factory).get(MainViewModel.class);
         mViewModel.getListOfNotes().observe(this, notes -> {
-            if (notes != null) mAdapter.submitList(notes);
+            if (notes != null) {
+                if (notes.isEmpty()) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                mAdapter.submitList(notes);
+            }
         });
     }
 

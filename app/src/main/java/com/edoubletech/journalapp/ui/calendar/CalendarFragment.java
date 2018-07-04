@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.TextView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
@@ -27,7 +28,6 @@ import com.edoubletech.journalapp.ui.add.AddFragment;
 import com.edoubletech.journalapp.ui.main.MainViewModel;
 import com.edoubletech.journalapp.ui.main.NotesAdapter;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -41,9 +41,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CalendarFragment extends Fragment implements CalendarView.OnDateChangeListener, NotesAdapter.NoteClickListener {
 
-    public CalendarFragment() { }
+    public CalendarFragment() {
+    }
 
     CalendarView calendarView;
+    private TextView mEmptyView;
     @Inject
     ViewModelFactory factory;
     MainViewModel mViewModel;
@@ -56,19 +58,12 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         calendarView = view.findViewById(R.id.calendarView);
         mRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        mEmptyView = view.findViewById(R.id.emptyViewCalendar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        calendarView.setFirstDayOfWeek(Calendar.SUNDAY);
-        calendarView.setDate(System.currentTimeMillis());
-        calendarView.setMinDate(1530467006);
-        calendarView.setMaxDate(1562003006);
         mRecyclerView.setAdapter(adapter);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         calendarView.setOnDateChangeListener(this);
+
+        return view;
     }
 
     @Override
@@ -82,7 +77,13 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     public void onSelectedDayChange(CalendarView calendarView, int year, int month, int dayOfMonth) {
         Date date = new Date(calendarView.getDate());
         mViewModel.getListOfNotesByDate(date).observe(this, notes -> {
-            adapter.submitList(notes);
+            if (notes != null) {
+                if (notes.isEmpty()) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }
+                adapter.submitList(notes);
+            }
         });
     }
 

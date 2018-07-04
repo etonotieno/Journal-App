@@ -16,4 +16,7 @@
     <string name="welcome_text">Welcome to My Journal where you can add your thoughts and views
         for a day.\n\nThink of it as a handy dandy Diary right on your phone.
     \n\nLogin to continue.</string>
+    <string name="empty_list_string">You have no journal entry. \nAdd some entries.</string>
+    <string name="empty_list_string_calendar">You have no journal entries for this day</string>
+
 </resources>

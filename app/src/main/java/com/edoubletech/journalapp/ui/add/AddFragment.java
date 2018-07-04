@@ -72,6 +72,16 @@ public class AddFragment extends Fragment {
         Date date = Calendar.getInstance().getTime();
         Bundle bundle = getArguments();
 
+        if (bundle != null && bundle.containsKey(Const.NOTE_ID_KEY)) {
+            int noteId = bundle.getInt(Const.NOTE_ID_KEY);
+            mViewModel.getNoteById(noteId).observe(this, noteData -> {
+                if (noteData != null) {
+                    titleEditText.setText(noteData.getTitle());
+                    descriptionEditText.setText(noteData.getDescription());
+                }
+            });
+        }
+
         saveFab.setOnClickListener(v -> {
             if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
                 String title = titleEditText.getText().toString().trim();
@@ -87,15 +97,5 @@ public class AddFragment extends Fragment {
                 ((NavHostActivity) getActivity()).bottomNav.setSelectedItemId(R.id.home_button);
             }
         });
-
-        if (bundle != null && bundle.containsKey(Const.NOTE_ID_KEY)) {
-            int noteId = bundle.getInt(Const.NOTE_ID_KEY);
-            mViewModel.getNoteById(noteId).observe(this, noteData -> {
-                if (noteData != null) {
-                    titleEditText.setText(noteData.getTitle());
-                    descriptionEditText.setText(noteData.getDescription());
-                }
-            });
-        }
     }
 }
