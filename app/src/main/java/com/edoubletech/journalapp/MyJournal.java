@@ -13,9 +13,9 @@
 
 package com.edoubletech.journalapp;
 
-import com.edoubletech.journalapp.di.ApplicationComponent;
-import com.edoubletech.journalapp.di.ApplicationModule;
-import com.edoubletech.journalapp.di.DaggerApplicationComponent;
+import com.edoubletech.journalapp.injection.ApplicationComponent;
+import com.edoubletech.journalapp.injection.ApplicationModule;
+import com.edoubletech.journalapp.injection.DaggerApplicationComponent;
 import com.google.firebase.FirebaseApp;
 
 import androidx.multidex.MultiDex;

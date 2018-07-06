@@ -19,4 +19,6 @@ public class Const {
     }
 
     public static String NOTE_ID_KEY = "NOTE_ID";
+    public static final int RC_SIGN_IN = 1001;
+
 }

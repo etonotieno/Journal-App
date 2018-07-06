@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.di;
+package com.edoubletech.journalapp.injection;
 
 import android.app.Application;
 

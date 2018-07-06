@@ -37,9 +37,10 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.edoubletech.journalapp.data.Const.RC_SIGN_IN;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int RC_SIGN_IN = 1001;
 
     @Inject
     UserDao userDao;

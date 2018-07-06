@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.di;
+package com.edoubletech.journalapp.injection;
 
 import com.edoubletech.journalapp.ui.calendar.CalendarFragment;
 import com.edoubletech.journalapp.ui.LoginActivity;
