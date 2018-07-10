@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.TextView;
 
 import com.edoubletech.journalapp.MyJournal;
@@ -27,8 +26,11 @@ import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.edoubletech.journalapp.ui.add.AddFragment;
 import com.edoubletech.journalapp.ui.main.MainViewModel;
 import com.edoubletech.journalapp.ui.main.NotesAdapter;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.inject.Inject;
 
@@ -39,12 +41,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CalendarFragment extends Fragment implements CalendarView.OnDateChangeListener, NotesAdapter.NoteClickListener {
+public class CalendarFragment extends Fragment implements NotesAdapter.NoteClickListener, OnDateSelectedListener {
 
     public CalendarFragment() {
     }
 
-    CalendarView calendarView;
+    MaterialCalendarView calendarView;
     private TextView mEmptyView;
     @Inject
     ViewModelFactory factory;
@@ -61,7 +63,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
         mEmptyView = view.findViewById(R.id.emptyViewCalendar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
-        calendarView.setOnDateChangeListener(this);
+        calendarView.setOnDateChangedListener(this);
 
         return view;
     }
@@ -71,20 +73,8 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
         super.onActivityCreated(savedInstanceState);
         ((MyJournal) getActivity().getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, factory).get(MainViewModel.class);
-    }
 
-    @Override
-    public void onSelectedDayChange(CalendarView calendarView, int year, int month, int dayOfMonth) {
-        Date date = new Date(calendarView.getDate());
-        mViewModel.getListOfNotesByDate(date).observe(this, notes -> {
-            if (notes != null) {
-                if (notes.isEmpty()) {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.GONE);
-                }
-                adapter.submitList(notes);
-            }
-        });
+        calendarView.setSelectedDate(Calendar.getInstance().getTime());
     }
 
     @Override
@@ -97,5 +87,18 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView mcv, @NonNull CalendarDay day, boolean b) {
+        mViewModel.getListOfNotesByDate(day.getDate()).observe(this, notes -> {
+            if (notes != null) {
+                if (notes.isEmpty()) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                } else
+                    adapter.submitList(notes);
+            }
+        });
     }
 }

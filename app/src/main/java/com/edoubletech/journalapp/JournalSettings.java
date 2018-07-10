@@ -36,4 +36,10 @@ public class JournalSettings {
     public static boolean userIsLoggedIn() {
         return preferences.getBoolean(IS_USER_LOGGED_IN, false);
     }
+
+    public static void clearSettings() {
+        preferences.edit()
+                .clear()
+                .apply();
+    }
 }

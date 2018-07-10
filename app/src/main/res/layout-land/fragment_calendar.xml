@@ -31,14 +31,10 @@
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/note_list_item" />
 
-    <CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="284dp"
         android:layout_height="0dp"
-        android:firstDayOfWeek="1"
-        android:fitsSystemWindows="true"
-        android:maxDate="30/12/2019"
-        android:minDate="1/1/2016"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
