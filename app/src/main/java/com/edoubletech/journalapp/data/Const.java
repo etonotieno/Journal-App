@@ -19,6 +19,7 @@ public class Const {
     }
 
     public static String NOTE_ID_KEY = "NOTE_ID";
+    public static String DATE_LONG_KEY = "SELECTED_DATE";
     public static final int RC_SIGN_IN = 1001;
 
 }
