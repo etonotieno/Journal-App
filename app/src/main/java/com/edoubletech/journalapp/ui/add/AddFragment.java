@@ -14,6 +14,8 @@
 package com.edoubletech.journalapp.ui.add;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.Const;
 import com.edoubletech.journalapp.data.model.Note;
-import com.edoubletech.journalapp.ui.NavHostActivity;
+import com.edoubletech.journalapp.ui.BaseActivity;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
 import com.edoubletech.journalapp.ui.main.MainFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,6 +50,13 @@ public class AddFragment extends Fragment {
     MultiAutoCompleteTextView descriptionEditText;
     TextInputEditText titleEditText;
     FloatingActionButton saveFab;
+    private Note mNote;
+    private Note mSavedNote;
+    private int mNoteId;
+    private String mAction;
+    public static final String CREATE_ACTION = "create";
+    public static final String EDIT_ACTION = "edit";
+    public static final String DELETE_ACTION = "delete";
     @Inject
     ViewModelFactory factory;
 
@@ -60,7 +69,63 @@ public class AddFragment extends Fragment {
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
         titleEditText = view.findViewById(R.id.titleEditText);
 
+        titleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mNote.setTitle(editable.toString());
+            }
+        });
+
+        descriptionEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mNote.setDescription(editable.toString());
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mNote != null) {
+            if (mAction.equals(CREATE_ACTION)) {
+                // Insert a note
+                mViewModel.addNote(mNote);
+            } else {
+                // Update Note
+                if (!mNote.equals(mSavedNote)) mViewModel.updateNote(mNote);
+            }
+        }
+    }
+
+    private void populateUi() {
+        if (mNote != null) {
+            titleEditText.setText(mNote.getTitle());
+            descriptionEditText.setText(mNote.getDescription());
+        }
     }
 
     @Override
@@ -70,31 +135,32 @@ public class AddFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this, factory).get(AddViewModel.class);
 
         Date date = Calendar.getInstance().getTime();
+
         Bundle bundle = getArguments();
 
+        mAction = (bundle == null) ? CREATE_ACTION : EDIT_ACTION;
+
         if (bundle != null && bundle.containsKey(Const.NOTE_ID_KEY)) {
-            int noteId = bundle.getInt(Const.NOTE_ID_KEY);
-            mViewModel.getNoteById(noteId).observe(this, noteData -> {
-                if (noteData != null) {
-                    titleEditText.setText(noteData.getTitle());
-                    descriptionEditText.setText(noteData.getDescription());
+            mNoteId = bundle.getInt(Const.NOTE_ID_KEY);
+
+            mViewModel.getNoteById(mNoteId).observe(this, note -> {
+                if (note == null) mNote = new Note();
+                else {
+                    mNote = note;
+                    if (mAction.equals(EDIT_ACTION)) mSavedNote = new Note(note);
                 }
+                populateUi();
             });
         }
 
         saveFab.setOnClickListener(v -> {
             if (titleEditText.getText().length() > 0 && descriptionEditText.getText().length() > 0) {
-                String title = titleEditText.getText().toString().trim();
-                String description = descriptionEditText.getText().toString().trim();
-                Note note = new Note(title, description, date);
-
-                mViewModel.addNote(note);
-
+                mNote.setDate(Calendar.getInstance().getTime());
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new MainFragment())
                         .commit();
 
-                ((NavHostActivity) getActivity()).bottomNav.setSelectedItemId(R.id.home_button);
+                ((BaseActivity) getActivity()).bottomNav.setSelectedItemId(R.id.home_button);
             }
         });
     }

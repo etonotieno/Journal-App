@@ -18,6 +18,7 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "notes_table")
@@ -40,6 +41,18 @@ public class Note {
         mTitle = title;
     }
 
+    @Ignore
+    public Note(Note note) {
+        this.id = note.getId();
+        this.mTitle = note.getTitle();
+        this.mDescription = note.getDescription();
+        this.mDate = note.getDate();
+    }
+
+    @Ignore
+    public Note() {
+    }
+
     public int getId() {
         return id;
     }
@@ -52,11 +65,38 @@ public class Note {
         return mTitle;
     }
 
+    public void setTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+
     public String getDescription() {
         return mDescription;
     }
 
+    public void setDescription(String mDescription) {
+        this.mDescription = mDescription;
+    }
+
     public Date getDate() {
         return mDate;
+    }
+
+    public void setDate(Date mDate) {
+        this.mDate = mDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Note) {
+            Note note = (Note) obj;
+            return note.getDescription().equals(mDescription) ||
+                    note.getTitle().equals(mTitle);
+        }
+        return false;
     }
 }
