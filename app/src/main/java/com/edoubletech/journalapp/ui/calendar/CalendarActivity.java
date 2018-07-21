@@ -11,22 +11,9 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.ui;
+package com.edoubletech.journalapp.ui.calendar;
 
-import com.edoubletech.journalapp.data.MainRepository;
-import com.edoubletech.journalapp.data.model.User;
+import com.edoubletech.journalapp.ui.BaseActivity;
 
-import androidx.lifecycle.ViewModel;
-
-public class NavHostViewModel extends ViewModel {
-
-    private MainRepository mRepo;
-
-    public NavHostViewModel(MainRepository repository){
-        mRepo = repository;
-    }
-
-    public User getUser(){
-        return mRepo.getUser();
-    }
+public class CalendarActivity extends BaseActivity {
 }

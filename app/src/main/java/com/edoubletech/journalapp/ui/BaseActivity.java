@@ -38,7 +38,9 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener;
 
 import javax.inject.Inject;
 
@@ -49,8 +51,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-public class NavHostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        BottomNavigationView.OnNavigationItemSelectedListener {
+public class BaseActivity extends AppCompatActivity implements OnConnectionFailedListener,
+        OnNavigationItemSelectedListener {
 
     @Inject
     ViewModelFactory factory;
@@ -59,7 +61,7 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
     @Inject
     NotesDao notesDao;
 
-    NavHostViewModel viewModel;
+    BaseViewModel viewModel;
     private GoogleApiClient mApiClient;
     public BottomNavigationView bottomNav;
     private User user;
@@ -71,10 +73,9 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_host);
 
-        // If this is the first time opening the app, load the MainFragment
         if (savedInstanceState == null) loadFragment(new MainFragment());
 
-        viewModel = ViewModelProviders.of(this, factory).get(NavHostViewModel.class);
+        viewModel = ViewModelProviders.of(this, factory).get(BaseViewModel.class);
 
         user = viewModel.getUser();
 
@@ -119,7 +120,7 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
         int id = item.getItemId();
         if (id == R.id.profile_icon) {
             // Handle a click on the profile icon
-            showLogoutConfirmationDialog();
+            showLogOutDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -129,7 +130,7 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
 
     }
 
-    private void showLogoutConfirmationDialog() {
+    private void showLogOutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to log out?");
         builder.setPositiveButton("Log Out", (dialog, id) -> logoutUser());
@@ -149,16 +150,16 @@ public class NavHostActivity extends AppCompatActivity implements GoogleApiClien
 
                 JournalSettings.setUserLoginStatus(false);
 
-                // Make the user go ic_background to the LoginActivity
+                // Make the user go back to the LoginActivity
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             } else if (status.isCanceled()) {
-                Toast.makeText(this, "Logging out was cancelled. Try again",
+                Toast.makeText(this, "Logging out was cancelled.\nTry again",
                         Toast.LENGTH_SHORT).show();
 
             } else if (status.isInterrupted())
-                Toast.makeText(this, "Logging out was interrupted Try again",
+                Toast.makeText(this, "Logging out was interrupted.\nTry again",
                         Toast.LENGTH_SHORT).show();
 
         });
