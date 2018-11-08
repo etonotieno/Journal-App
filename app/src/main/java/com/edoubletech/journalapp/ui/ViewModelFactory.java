@@ -40,8 +40,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             return (T) new MainViewModel(mRepo);
         else if (modelClass.isAssignableFrom(AddViewModel.class))
             return (T) new AddViewModel(mRepo);
-        else if (modelClass.isAssignableFrom(NavHostViewModel.class))
-            return (T) new NavHostViewModel(mRepo);
+        else if (modelClass.isAssignableFrom(BaseViewModel.class))
+            return (T) new BaseViewModel(mRepo);
         else {
             throw new IllegalArgumentException(modelClass.getName() + "Not found.");
         }

@@ -17,15 +17,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.edoubletech.journalapp.MyJournal;
 import com.edoubletech.journalapp.R;
 import com.edoubletech.journalapp.data.Const;
 import com.edoubletech.journalapp.ui.ViewModelFactory;
-import com.edoubletech.journalapp.ui.add.AddFragment;
 import com.edoubletech.journalapp.ui.main.MainViewModel;
-import com.edoubletech.journalapp.ui.main.NotesAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -38,33 +35,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class CalendarFragment extends Fragment implements NotesAdapter.NoteClickListener, OnDateSelectedListener {
+public class CalendarFragment extends Fragment implements OnDateSelectedListener {
 
     public CalendarFragment() {
     }
 
     MaterialCalendarView calendarView;
-    private TextView mEmptyView;
     @Inject
     ViewModelFactory factory;
     MainViewModel mViewModel;
-    RecyclerView mRecyclerView;
-    private NotesAdapter adapter = new NotesAdapter(this);
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         calendarView = view.findViewById(R.id.calendarView);
-        mRecyclerView = view.findViewById(R.id.calendarRecyclerView);
-        mEmptyView = view.findViewById(R.id.emptyViewCalendar);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(adapter);
+        calendarView.setSelectedDate(Calendar.getInstance().getTime());
         calendarView.setOnDateChangedListener(this);
-
         return view;
     }
 
@@ -74,31 +62,13 @@ public class CalendarFragment extends Fragment implements NotesAdapter.NoteClick
         ((MyJournal) getActivity().getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, factory).get(MainViewModel.class);
 
-        calendarView.setSelectedDate(Calendar.getInstance().getTime());
-    }
-
-    @Override
-    public void OnNoteItemClick(int noteId) {
-        Bundle args = new Bundle();
-        args.putInt(Const.NOTE_ID_KEY, noteId);
-        AddFragment fragment = new AddFragment();
-        fragment.setArguments(args);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
     }
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView mcv, @NonNull CalendarDay day, boolean b) {
-        mViewModel.getListOfNotesByDate(day.getDate()).observe(this, notes -> {
-            if (notes != null) {
-                if (notes.isEmpty()) {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.GONE);
-                } else
-                    adapter.submitList(notes);
-            }
-        });
+        Bundle args = new Bundle();
+        args.putLong(Const.DATE_LONG_KEY, mcv.getSelectedDate().getDate().getTime());
+        SelectedFragment fragment = new SelectedFragment();
+        fragment.setArguments(args);
     }
 }

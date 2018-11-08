@@ -72,9 +72,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is logged in. If true then start the NavHostActivity
+        // Check if user is logged in. If true then start the BaseActivity
         if (JournalSettings.userIsLoggedIn()) {
-            startActivity(new Intent(LoginActivity.this, NavHostActivity.class));
+            startActivity(new Intent(LoginActivity.this, BaseActivity.class));
             finish();
         }
     }
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     User user = new User(name, email, imageUrl);
                     userDao.insertData(user);
                     JournalSettings.setUserLoginStatus(true);
-                    Intent intent = new Intent(this, NavHostActivity.class);
+                    Intent intent = new Intent(this, BaseActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

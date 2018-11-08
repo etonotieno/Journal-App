@@ -11,15 +11,19 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.data;
+package com.edoubletech.journalapp.ui.add;
 
-public class Const {
+import android.os.Bundle;
 
-    private Const(){
+import com.edoubletech.journalapp.R;
+import com.edoubletech.journalapp.ui.BaseActivity;
+
+public class AddActivity extends BaseActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_add);
+
     }
-
-    public static String NOTE_ID_KEY = "NOTE_ID";
-    public static String DATE_LONG_KEY = "SELECTED_DATE";
-    public static final int RC_SIGN_IN = 1001;
-
 }

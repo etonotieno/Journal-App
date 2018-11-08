@@ -11,15 +11,22 @@
  * limitations under the License.
  */
 
-package com.edoubletech.journalapp.data;
+package com.edoubletech.journalapp.ui;
 
-public class Const {
+import com.edoubletech.journalapp.data.MainRepository;
+import com.edoubletech.journalapp.data.model.User;
 
-    private Const(){
+import androidx.lifecycle.ViewModel;
+
+public class BaseViewModel extends ViewModel {
+
+    private MainRepository mRepo;
+
+    public BaseViewModel(MainRepository repository){
+        mRepo = repository;
     }
 
-    public static String NOTE_ID_KEY = "NOTE_ID";
-    public static String DATE_LONG_KEY = "SELECTED_DATE";
-    public static final int RC_SIGN_IN = 1001;
-
+    public User getUser(){
+        return mRepo.getUser();
+    }
 }
